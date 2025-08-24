@@ -37,7 +37,7 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
 
   const addonsList = useMemo(() => item.addons ?? [], [item.addons]);
 
-  const base = item.price * qty;
+  const base = item.price;
   const addonsTotal = useMemo(
     () =>
       Object.entries(addons).reduce((sum, [addonId, aQty]) => {
@@ -46,8 +46,8 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
       }, 0),
     [addons, addonsList]
   );
-
-  const total = base + addonsTotal;
+  const unitTotal = base + addonsTotal;
+  const total = unitTotal * qty;
 
   const setAddonQty = (id: string, q: number, max?: number) => {
     setAddons((prev) => {
@@ -64,19 +64,18 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
       menuId: item.id,
       name: item.name,
       basePrice: item.price,
-      totalPrice: total,
+      totalPrice: unitTotal, // unit price for one item with addons
       quantity: qty,
       variations: Object.keys(variations).length ? variations : undefined,
       addons:
         Object.entries(addons).map(([id, q]) => {
           const a = addonsList.find((x) => x.id === id)!;
-          return { id, name: a.name, price: a.price, quantity: q };
+          return { id, name: a.name, price: a.price, quantity: q }; // Changed: no * qty
         }) ?? [],
       note: note || undefined,
     });
     onClose();
   };
-
   return (
     <>
       <Backdrop onClick={onClose} />
@@ -99,8 +98,8 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
         {/* Variations */}
         {item.variations?.length ? (
           <div className="mt-4 space-y-3">
-            {item.variations.map((v) => (
-              <div key={v.name}>
+            {item.variations.map((v, id) => (
+              <div key={id}>
                 <label className="mb-1 block text-sm font-medium">
                   {v.name}
                   {v.required ? " *" : ""}
@@ -110,8 +109,8 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
                   value={variations[v.name] ?? ""}
                   onChange={(e) => setVariations({ ...variations, [v.name]: e.target.value })}
                 >
-                  {v.choices.map((c) => (
-                    <option key={c} value={c}>
+                  {v.choices.map((c, id) => (
+                    <option key={id} value={c}>
                       {c}
                     </option>
                   ))}
@@ -126,10 +125,10 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
           <div className="mt-4">
             <div className="mb-2 text-sm font-semibold">Toppings / Add-ons</div>
             <div className="space-y-2">
-              {addonsList.map((a) => {
+              {addonsList.map((a, id) => {
                 const q = addons[a.id] ?? 0;
                 return (
-                  <div key={a.id} className="flex items-center justify-between rounded border p-2">
+                  <div key={id} className="flex items-center justify-between rounded border p-2">
                     <div>
                       <div className="text-sm">{a.name}</div>
                       <div className="text-xs text-gray-500">{formatRp(a.price)}</div>

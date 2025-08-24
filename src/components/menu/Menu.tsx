@@ -42,7 +42,7 @@ const SectionAccordion: React.FC<{
           </div>
 
           {subCategories.map((subCategory, id) => (
-            <div key={id}>
+            <div key={id} className="mb-2">
               <h4 className="font-medium">{subCategory.title}</h4>
               <div className={viewMode === "grid" ? "grid gap-2 grid-cols-2" : "flex flex-col gap-1"}>
                 {subCategory.items.map((item, id) => (
@@ -74,6 +74,7 @@ export default function Menu() {
     };
     fetchData();
   }, []);
+    console.log(menuData)
 
   if (loading) {
     return <div className="text-center p-4">Loading menu...</div>;
