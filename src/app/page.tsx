@@ -1,11 +1,6 @@
-// app/menu/page.tsx (server component by default)
-import MenuTemplate from "@/components/menu/MenuTemplate";
-import { Suspense } from "react";
+// app/page.tsx (server component by default)
+import MenuTemplate from "@/components/Menu/MenuTemplate";
 
 export default function MenuPage() {
-  return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <MenuTemplate />
-      </Suspense>
-  );
+  return <MenuTemplate />;
 }

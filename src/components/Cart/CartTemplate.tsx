@@ -1,12 +1,10 @@
-// app/menu/MenuPageClient.tsx
 "use client";
 import React from "react";
-import Menu from "@/components/Menu/Menu";
 import { useOrder } from "@/context/OrderContext";
 import { useRouter } from "next/navigation";
-import { ShoppingCart } from "lucide-react";
+import Cart from "@/components/Cart/Cart";
 
-export default function MenuPageClient() {
+export default function CartTemplate() {
   const { order } = useOrder();
   const router = useRouter();
 
@@ -16,27 +14,21 @@ export default function MenuPageClient() {
         <div className="mx-auto max-w-5xl flex items-center justify-between px-2 py-3">
           <span className="text-2xl font-bold tracking-tight">KAPE WAWAW</span>
           <button
-            onClick={() => router.push("/cart" + (order.table ? `?table=${order.table}` : ""))}
-            className="relative"
-            aria-label="View Cart"
+            onClick={() => router.push("/" + (order.table ? `?table=${order.table}` : ""))}
+            className="text-sm text-gray-600 hover:underline"
           >
-            <ShoppingCart className="h-7 w-7 text-gray-700" />
-            {order.items.length > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white font-bold shadow">
-                {order.items.length}
-              </span>
-            )}
+            Back to Menu
           </button>
         </div>
       </header>
       <main className="mx-auto max-w-5xl p-2">
         <header className="mb-2">
           <div className="flex items-center justify-between">
-            <span className="text-lg font-semibold">Menu</span>
+            <span className="text-lg font-semibold">Your Order</span>
             {order.table && <span className="font-semibold">Table: {order.table}</span>}
           </div>
         </header>
-        <Menu />
+        <Cart />
       </main>
     </>
   );
