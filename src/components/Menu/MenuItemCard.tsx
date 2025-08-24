@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import type { MenuItem } from "@/types";
 import { formatRp, useOrder } from "@/context/OrderContext";
-import MenuItemModal from "./MenuItemModal";
+import { MenuItemModal } from "./MenuItemModal";
 import { Minus, Plus } from "lucide-react";
 
 const MenuItemCard: React.FC<{ item: MenuItem; viewMode?: "list" | "grid" }> = ({ item, viewMode = "grid" }) => {

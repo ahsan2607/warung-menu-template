@@ -22,7 +22,7 @@ const ModalShell: React.FC<React.PropsWithChildren> = ({ children }) => (
   </div>
 );
 
-const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
+export const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
   const { addItem } = useOrder();
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
@@ -191,4 +191,3 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
   );
 };
 
-export default MenuItemModal;
