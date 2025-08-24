@@ -1,11 +1,11 @@
 // ./src/app/api/menu/route.ts (No changes needed, as session is removed)
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import axios, { AxiosError } from 'axios';
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // Replace with your deployed script URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzCmdhUaowNnqy-QIRZZUDzdL0Wnn-xoXZYGDuGl1QVDTWYXRvwuYk16OH2rANkxLEL/exec'; // Replace with your deployed script URL
 const API_KEY = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'; // Match the key in Apps Script
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const proxiedBody = { action: 'getMenuData', apiKey: API_KEY };
 
   try {

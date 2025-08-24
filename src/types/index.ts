@@ -1,4 +1,4 @@
-// ./src/types/index.ts (No changes needed, but confirming it matches)
+// ./src/types/index.ts
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;
@@ -28,7 +28,12 @@ export type MenuItem = {
   addons?: AddonOption[];
 };
 
-export type MenuSection = {
+export type Subcategory = {
   title: string;
   items: MenuItem[];
+};
+
+export type MenuSection = {
+  title: string;
+  subcategories: Subcategory[];
 };

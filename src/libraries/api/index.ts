@@ -2,7 +2,7 @@
 import axios, { AxiosError } from 'axios';
 import { ApiResponse, MenuSection } from '@/types';
 
-const API_URL = '/api/menu'; // Matches the new route
+const API_URL = '/api/proxy'; // Matches the new route
 
 const api = axios.create({
   baseURL: API_URL,

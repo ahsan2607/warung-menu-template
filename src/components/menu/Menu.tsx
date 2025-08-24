@@ -1,21 +1,24 @@
+// ./src/components/menu/Menu.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { List, Grid, Minus, Plus } from "lucide-react";
-import { menuData } from "./data";
+import { getMenuData } from "@/libraries/api";
 import MenuItemCard from "./MenuItemCard";
 import Cart from "../order/Cart";
+import type { MenuSection, Subcategory } from "@/types";
 
 const SectionAccordion: React.FC<{
   title: string;
-  children: React.ReactNode;
-}> = ({ title, children }) => {
+  subCategories: Subcategory[];
+  // children: React.ReactNode;
+}> = ({ title, subCategories }) => {
   const [open, setOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   return (
     <div className="border rounded-lg bg-white shadow-sm">
       <button className="w-full p-2 flex items-center justify-between text-left" onClick={() => setOpen(!open)}>
-        <span className="font-semibold">{title}</span>
+        <span className="text-lg font-semibold">{title}</span>
         <span className="text-lg">{open ? <Minus /> : <Plus />}</span>
       </button>
 
@@ -37,15 +40,17 @@ const SectionAccordion: React.FC<{
               <Grid className="h-4 w-4" />
             </button>
           </div>
-          
-          <div className={viewMode === "grid" ? "grid gap-2 grid-cols-2" : "flex flex-col gap-1"}>
-            {children &&
-              React.Children.map(children, (child) => {
-                if (!React.isValidElement(child)) return child;
-                // Tell TypeScript this is a MenuItemCard
-                return React.cloneElement(child as React.ReactElement<{ viewMode?: "list" | "grid" }>, { viewMode });
-              })}
-          </div>
+
+          {subCategories.map((subCategory, id) => (
+            <div key={id}>
+              <h4 className="font-medium">{subCategory.title}</h4>
+              <div className={viewMode === "grid" ? "grid gap-2 grid-cols-2" : "flex flex-col gap-1"}>
+                {subCategory.items.map((item, id) => (
+                  <MenuItemCard key={id} item={item} viewMode={viewMode} />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -53,19 +58,38 @@ const SectionAccordion: React.FC<{
 };
 
 export default function Menu() {
+  const [menuData, setMenuData] = useState<MenuSection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getMenuData();
+      if (response.success) {
+        setMenuData(response.data || []);
+      } else {
+        setError(response.error || "Failed to load menu");
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center p-4">Loading menu...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center p-4 text-red-600">Error: {error}</div>;
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-[1fr_360px]">
       <div className="space-y-4">
-        {menuData.map((section) => (
-          <SectionAccordion key={section.title} title={section.title}>
-            {section.items.map((it) => (
-              <MenuItemCard key={it.id} item={it} />
-            ))}
-          </SectionAccordion>
+        {menuData.map((section, id) => (
+          <SectionAccordion key={id} title={section.title} subCategories={section.subcategories} />
         ))}
       </div>
-
-      {/* Order summary / cart */}
       <div className="md:sticky md:top-4 h-fit">
         <Cart />
       </div>
