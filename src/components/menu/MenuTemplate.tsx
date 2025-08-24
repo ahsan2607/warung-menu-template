@@ -1,12 +1,11 @@
-// app/menu/MenuPageClient.tsx
 "use client";
 import React from "react";
-import Menu from "@/components/Menu/Menu";
+import { Menu } from "./Menu";
 import { useOrder } from "@/context/OrderContext";
 import { useRouter } from "next/navigation";
 import { ShoppingCart } from "lucide-react";
 
-export default function MenuPageClient() {
+export const MenuTemplate = () => {
   const { order } = useOrder();
   const router = useRouter();
 
@@ -17,7 +16,7 @@ export default function MenuPageClient() {
           <span className="text-2xl font-bold tracking-tight">KAPE WAWAW</span>
           <button
             onClick={() => router.push("/cart" + (order.table ? `?table=${order.table}` : ""))}
-            className="relative"
+            className="relative md:hidden"
             aria-label="View Cart"
           >
             <ShoppingCart className="h-7 w-7 text-gray-700" />
@@ -40,4 +39,4 @@ export default function MenuPageClient() {
       </main>
     </>
   );
-}
+};

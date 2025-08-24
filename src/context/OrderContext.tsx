@@ -15,6 +15,7 @@ export type OrderItem = {
   basePrice: number;
   quantity: number;
   totalPrice: number;
+  addonsPrice?: number;
   variations?: Record<string, string>; // { Spiciness: 'Hot' }
   addons?: OrderAddon[];
   note?: string;
@@ -68,6 +69,7 @@ export const OrderProvider: React.FC<React.PropsWithChildren<{ initialTable?: st
           i.menuId === item.menuId &&
           i.basePrice === item.basePrice &&
           i.totalPrice === item.totalPrice &&
+          (i.addonsPrice ?? 0) === (item.addonsPrice ?? 0) &&
           i.name === item.name &&
           JSON.stringify(i.variations ?? {}) === JSON.stringify(item.variations ?? {}) &&
           JSON.stringify(i.addons ?? []) === JSON.stringify(item.addons ?? []) &&

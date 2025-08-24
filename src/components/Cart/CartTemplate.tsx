@@ -2,9 +2,9 @@
 import React from "react";
 import { useOrder } from "@/context/OrderContext";
 import { useRouter } from "next/navigation";
-import Cart from "@/components/Cart/Cart";
+import { Cart } from "./Cart";
 
-export default function CartTemplate() {
+export const CartTemplate = () => {
   const { order } = useOrder();
   const router = useRouter();
 

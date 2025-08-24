@@ -2,16 +2,34 @@
 import React, { useState } from "react";
 import { useOrder, formatRp } from "@/context/OrderContext";
 import { Plus } from "lucide-react";
+import { submitOrders } from "@/libraries/api";
 
-export default function Cart() {
+export const Cart = () => {
   const { order, subtotal, updateItemQty, removeItem, clearOrder } = useOrder();
   const [openDetails, setOpenDetails] = useState<Record<string, boolean>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   const toggleDetail = (id: string) => {
     setOpenDetails((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  console.log(order, subtotal);
+  const handleSubmitOrders = async () => {
+    if (!order.items.length) return;
+    setSubmitting(true);
+    try {
+      const response = await submitOrders(order.items, order.table);
+      if (response.success) {
+        alert(response.data?.message);
+        clearOrder();
+      } else {
+        alert(`Error: ${response.error}`);
+      }
+    } catch (error) {
+      alert(`Failed to submit orders: ${error}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <aside className="rounded-lg border bg-white p-2 shadow-sm">
@@ -103,14 +121,15 @@ export default function Cart() {
               Kosongkan
             </button>
             <button
-              onClick={() => alert("Submit to backend here")}
+              onClick={handleSubmitOrders}
+              disabled={submitting}
               className="flex-1 rounded bg-black px-3 py-2 text-sm text-white hover:opacity-90"
             >
-              Kirim Pesanan
+              {submitting ? "Mengirim..." : "Kirim Pesanan"}
             </button>
           </div>
         </div>
       )}
     </aside>
   );
-}
+};

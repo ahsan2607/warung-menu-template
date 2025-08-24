@@ -1,0 +1,52 @@
+"use client";
+import React, { useState } from "react";
+import { List, Grid, Minus, Plus } from "lucide-react";
+import MenuItemCard from "./MenuItemCard";
+import type { Subcategory } from "@/types";
+
+export const SectionAccordion: React.FC<{ title: string; subCategories: Subcategory[] }> = ({
+  title,
+  subCategories,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+
+  return (
+    <div className="border rounded-lg bg-white shadow-sm">
+      <button className="w-full p-2 flex items-center justify-between text-left" onClick={() => setOpen(!open)}>
+        <span className="text-lg font-semibold">{title}</span>
+        <span className="text-lg">{open ? <Minus /> : <Plus />}</span>
+      </button>
+      {open && (
+        <div className="p-2 pt-0">
+          <div className="flex justify-end gap-2 py-2">
+            <button
+              onClick={() => setViewMode("list")}
+              className={`rounded px-2 py-1 text-sm border ${viewMode === "list" ? "bg-gray-200" : "bg-gray-50"}`}
+              title="List view"
+            >
+              <List className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`rounded px-2 py-1 text-sm border ${viewMode === "grid" ? "bg-gray-200" : "bg-gray-50"}`}
+              title="Grid view"
+            >
+              <Grid className="h-4 w-4" />
+            </button>
+          </div>
+          {subCategories.map((subCategory, id) => (
+            <div key={id} className="mb-2">
+              <h4 className="font-medium">{subCategory.title}</h4>
+              <div className={viewMode === "grid" ? "grid gap-2 grid-cols-2" : "flex flex-col gap-1"}>
+                {subCategory.items.map((item, id) => (
+                  <MenuItemCard key={id} item={item} viewMode={viewMode} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};

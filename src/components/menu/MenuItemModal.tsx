@@ -18,22 +18,18 @@ const Backdrop: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 
 const ModalShell: React.FC<React.PropsWithChildren> = ({ children }) => (
   <div className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-2xl rounded-t-2xl bg-white shadow-2xl md:inset-0 md:my-10 md:h-fit md:max-w-lg md:rounded-2xl">
-    <div className="max-h-[90vh] overflow-y-auto p-4">
-      {children}
-    </div>
+    <div className="max-h-[90vh] overflow-y-auto p-4">{children}</div>
   </div>
 );
 
 const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
   const { addItem } = useOrder();
-
-  // local selections
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   const [variations, setVariations] = useState<Record<string, string>>(() =>
     Object.fromEntries((item.variations ?? []).map((v) => [v.name, v.defaultChoice ?? v.choices[0] ?? ""]))
   );
-  const [addons, setAddons] = useState<Record<string, number>>({}); // addonId -> qty
+  const [addons, setAddons] = useState<Record<string, number>>({});
 
   const addonsList = useMemo(() => item.addons ?? [], [item.addons]);
 
@@ -45,7 +41,7 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
         return a ? sum + a.price * aQty : sum;
       }, 0),
     [addons, addonsList]
-  );
+  ) || 0;
   const unitTotal = base + addonsTotal;
   const total = unitTotal * qty;
 
@@ -64,13 +60,14 @@ const MenuItemModal: React.FC<Props> = ({ item, onClose }) => {
       menuId: item.id,
       name: item.name,
       basePrice: item.price,
-      totalPrice: unitTotal, // unit price for one item with addons
+      totalPrice: unitTotal,
+      addonsPrice: addonsTotal,
       quantity: qty,
       variations: Object.keys(variations).length ? variations : undefined,
       addons:
         Object.entries(addons).map(([id, q]) => {
           const a = addonsList.find((x) => x.id === id)!;
-          return { id, name: a.name, price: a.price, quantity: q }; // Changed: no * qty
+          return { id, name: a.name, price: a.price, quantity: q };
         }) ?? [],
       note: note || undefined,
     });

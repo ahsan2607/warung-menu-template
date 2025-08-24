@@ -22,10 +22,9 @@ const MenuItemCard: React.FC<{ item: MenuItem; viewMode?: "list" | "grid" }> = (
       totalPrice: item.price,
       quantity,
     });
-    setQuantity(1); // reset after adding
+    setQuantity(1);
   };
 
-  // List layout
   if (viewMode === "list") {
     return (
       <>
@@ -41,7 +40,6 @@ const MenuItemCard: React.FC<{ item: MenuItem; viewMode?: "list" | "grid" }> = (
                 <h3 className="font-medium text-sm">{item.name}</h3>
                 <p className="text-sm text-gray-600">{formatRp(item.price)}</p>
               </div>
-
               {hasOptions ? (
                 <button
                   onClick={() => setModalOpen(true)}
@@ -79,63 +77,58 @@ const MenuItemCard: React.FC<{ item: MenuItem; viewMode?: "list" | "grid" }> = (
             </div>
           </div>
         </div>
-
         {modalOpen && <MenuItemModal item={item} onClose={() => setModalOpen(false)} />}
       </>
     );
   }
 
-  // Grid layout
   if (viewMode === "grid") {
-  return (
-    <>
-      <div className="rounded-lg border bg-white p-2 shadow-sm flex flex-col h-full min-w-0">
-        {item.image && (
-          <div className="relative mb-1 h-20 w-full overflow-hidden rounded">
-            <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
-          </div>
-        )}
-        <div className="mb-1 items-center justify-between min-w-0">
-          <h3
-            className="font-medium text-xs truncate max-w-[110px]"
-            title={item.name}
-          >
-            {item.name}
-          </h3>
-          <span className="text-gray-700 text-xs">{formatRp(item.price)}</span>
-        </div>
-
-        <div className="mt-auto">
-          {hasOptions ? (
-            <button
-              onClick={() => setModalOpen(true)}
-              className="w-full rounded bg-black px-2 py-1 text-xs text-white hover:opacity-90"
-            >
-              Pilih
-            </button>
-          ) : (
-            <div className="flex items-center gap-1">
-              <input
-                type="number"
-                min={1}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-10 rounded border px-1 py-0.5 text-xs"
-              />
-              <button
-                onClick={handleAddDirect}
-                className="flex-1 rounded bg-black px-2 py-1 text-xs text-white hover:opacity-90"
-              >
-                Tambah
-              </button>
+    return (
+      <>
+        <div className="rounded-lg border bg-white p-2 shadow-sm flex flex-col h-full min-w-0">
+          {item.image && (
+            <div className="relative mb-1 h-20 w-full overflow-hidden rounded">
+              <Image src={item.image} alt={item.name} fill className="object-cover" unoptimized />
             </div>
           )}
+          <div className="mb-1 items-center justify-between min-w-0">
+            <h3 className="font-medium text-xs truncate max-w-[110px]" title={item.name}>
+              {item.name}
+            </h3>
+            <span className="text-gray-700 text-xs">{formatRp(item.price)}</span>
+          </div>
+
+          <div className="mt-auto">
+            {hasOptions ? (
+              <button
+                onClick={() => setModalOpen(true)}
+                className="w-full rounded bg-black px-2 py-1 text-xs text-white hover:opacity-90"
+              >
+                Pilih
+              </button>
+            ) : (
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  min={1}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-10 rounded border px-1 py-0.5 text-xs"
+                />
+                <button
+                  onClick={handleAddDirect}
+                  className="flex-1 rounded bg-black px-2 py-1 text-xs text-white hover:opacity-90"
+                >
+                  Tambah
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      {modalOpen && <MenuItemModal item={item} onClose={() => setModalOpen(false)} />}
-    </>
-  );
-}
+        {modalOpen && <MenuItemModal item={item} onClose={() => setModalOpen(false)} />}
+      </>
+    );
+  }
 };
 
 export default MenuItemCard;
