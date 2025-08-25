@@ -117,9 +117,6 @@ export const Cart = () => {
           </div>
 
           <div className="flex gap-2">
-            <button onClick={clearOrder} className="flex-1 rounded border px-3 py-2 text-sm hover:bg-gray-50">
-              Kosongkan
-            </button>
             <button
               onClick={handleSubmitOrders}
               disabled={submitting}

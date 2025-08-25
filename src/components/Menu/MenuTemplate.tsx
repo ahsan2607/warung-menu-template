@@ -22,7 +22,7 @@ export const MenuTemplate = () => {
             <ShoppingCart className="h-7 w-7 text-gray-700" />
             {order.items.length > 0 && (
               <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white font-bold shadow">
-                {order.items.length}
+                {order.items.reduce((sum, item) => sum + item.quantity, 0)}
               </span>
             )}
           </button>
